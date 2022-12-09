@@ -19,45 +19,47 @@ class Logger {
   private logKey = process.env.npm_package_config_logger_logKey ?? 'log';
   private outputLocalStorageLevel: string = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
   private outputEndpointLevel: string = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
-  private maxLogLocalStorage: number = Number(process.env.npm_package_config_logger_maxLogLocalStorage) ?? 1000; 
+  private maxLogLocalStorage: number = Number(process.env.npm_package_config_logger_maxLogLocalStorage) ?? 300; 
   private debugOutput = sessionStorage.getItem('min-logger-debug-flag');
 
   public constructor() {
     console.log(this.logKey);
     window.addEventListener('unload', () => {
       const sessionLog = sessionStorage.getItem(this.logKey);
-      if (!sessionLog) {
-        return;
+      if (sessionLog === null) {
+          return;
       }
       const log = JSON.parse(sessionLog);
-      const saveLog = log.filter((trace: any) => {//保存すべきログの抽出
-        return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) < trace.level;
+      const saveLog = log.filter((trace:any) => {
+          return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) <= trace.level;
       });
       if (saveLog.length === 0) {
-        return;
+          return;
       }
-
       const oldTrace = localStorage.getItem(this.logKey) ?? false;
-      if (oldTrace !== false) {
-        const newTrace = (JSON.parse(oldTrace)).concat(saveLog);
-        localStorage.setItem(this.logKey, JSON.stringify(newTrace));
-      }else{
-        localStorage.setItem(this.logKey, JSON.stringify(saveLog))
+      if (!oldTrace) {
+        localStorage.setItem(this.logKey, JSON.stringify(saveLog));
       }
-      const trace = JSON.parse(localStorage.getItem(this.logKey) ?? '')
-      if(trace.length > this.maxLogLocalStorage){
-        trace.splice(0, trace.length - this.maxLogLocalStorage);
-        localStorage.setItem(this.logKey, JSON.stringify(trace));
+      else {
+        const newTrace = JSON.parse(oldTrace).concat(saveLog);
+        localStorage.setItem(this.logKey, JSON.stringify(newTrace));
+      }
+      const trace = JSON.parse(localStorage.getItem(this.logKey) ?? '');
+      if (trace.length > this.maxLogLocalStorage) {
+          trace.splice(0, trace.length - this.maxLogLocalStorage);
+          localStorage.setItem(this.logKey, JSON.stringify(trace));
       }
     });
   }
   private storeSession(level: number, date: Date, ...args: [...any]){
     const oldTrace = sessionStorage.getItem(this.logKey) ?? false;
-    if (oldTrace !== false) {
-      const newTrace = (JSON.parse(oldTrace)).push({ date: date, level: level, details: [...args] })
-      sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
+    if(!oldTrace){
+      const trace = [{ date: date, level: level, details: [...args] }]
+      sessionStorage.setItem(this.logKey, JSON.stringify(trace));
     }else{
-      sessionStorage.setItem(this.logKey, JSON.stringify([{ date: date, level: level, details: [...args] }]))
+      const trace = JSON.parse(oldTrace);
+      trace.push({ date: date, level: level, details: [...args] })
+      sessionStorage.setItem(this.logKey, JSON.stringify(trace));
     }
   };
   private findValueByPrefix(object: any, prefix: any){

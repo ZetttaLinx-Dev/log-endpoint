@@ -15,29 +15,29 @@ class Logger {
     logKey = process.env.npm_package_config_logger_logKey ?? 'log';
     outputLocalStorageLevel = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
     outputEndpointLevel = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
-    maxLogLocalStorage = Number(process.env.npm_package_config_logger_maxLogLocalStorage) ?? 1000;
+    maxLogLocalStorage = Number(process.env.npm_package_config_logger_maxLogLocalStorage) ?? 300;
     debugOutput = sessionStorage.getItem('min-logger-debug-flag');
     constructor() {
         console.log(this.logKey);
         window.addEventListener('unload', () => {
             const sessionLog = sessionStorage.getItem(this.logKey);
-            if (!sessionLog) {
+            if (sessionLog === null) {
                 return;
             }
             const log = JSON.parse(sessionLog);
             const saveLog = log.filter((trace) => {
-                return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) < trace.level;
+                return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) <= trace.level;
             });
             if (saveLog.length === 0) {
                 return;
             }
             const oldTrace = localStorage.getItem(this.logKey) ?? false;
-            if (oldTrace !== false) {
-                const newTrace = (JSON.parse(oldTrace)).concat(saveLog);
-                localStorage.setItem(this.logKey, JSON.stringify(newTrace));
+            if (!oldTrace) {
+                localStorage.setItem(this.logKey, JSON.stringify(saveLog));
             }
             else {
-                localStorage.setItem(this.logKey, JSON.stringify(saveLog));
+                const newTrace = JSON.parse(oldTrace).concat(saveLog);
+                localStorage.setItem(this.logKey, JSON.stringify(newTrace));
             }
             const trace = JSON.parse(localStorage.getItem(this.logKey) ?? '');
             if (trace.length > this.maxLogLocalStorage) {
@@ -48,12 +48,14 @@ class Logger {
     }
     storeSession(level, date, ...args) {
         const oldTrace = sessionStorage.getItem(this.logKey) ?? false;
-        if (oldTrace !== false) {
-            const newTrace = (JSON.parse(oldTrace)).push({ date: date, level: level, details: [...args] });
-            sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
+        if (!oldTrace) {
+            const trace = [{ date: date, level: level, details: [...args] }];
+            sessionStorage.setItem(this.logKey, JSON.stringify(trace));
         }
         else {
-            sessionStorage.setItem(this.logKey, JSON.stringify([{ date: date, level: level, details: [...args] }]));
+            const trace = JSON.parse(oldTrace);
+            trace.push({ date: date, level: level, details: [...args] });
+            sessionStorage.setItem(this.logKey, JSON.stringify(trace));
         }
     }
     ;
