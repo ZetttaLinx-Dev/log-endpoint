@@ -2,15 +2,16 @@
   "name": "min-logger",
   "version": "1.0.1",
   "description": "",
-  "types": "dist/index.d.ts",
+  "types": "@types/logger.d.ts",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "@types"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf dist",
-    "build": "tsc -d"
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
