@@ -3,7 +3,7 @@ declare const DEBUG_OUTPUT: {
     readonly ENDPOINT: "ENDPOINT";
 };
 type DEBUG_OUTPUT = typeof DEBUG_OUTPUT[keyof typeof DEBUG_OUTPUT];
-declare class Logger {
+export default class Logger {
     private endpointUrl;
     private logKey;
     private outputLocalStorageLevel;
@@ -22,4 +22,4 @@ declare class Logger {
     error(...args: [...any]): void;
     send(url?: string): void;
 }
-export { Logger };
+export {};
