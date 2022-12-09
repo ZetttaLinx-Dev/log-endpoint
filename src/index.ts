@@ -129,7 +129,6 @@ class Logger {
       });
   };
 }
-const useLogger = Logger.useLogger();
 
 
-export { useLogger }
+export { Logger }

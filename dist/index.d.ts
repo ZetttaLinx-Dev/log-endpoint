@@ -16,5 +16,4 @@ declare class Logger {
     static error: (...args: [...any]) => void;
     static send: (url?: string) => void;
 }
-declare const useLogger: Logger;
-export { useLogger };
+export { Logger };

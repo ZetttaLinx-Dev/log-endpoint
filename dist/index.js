@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useLogger = void 0;
+exports.Logger = void 0;
 const LOG_LEVEL = {
     DEBUG: 0,
     INFO: 1,
@@ -119,5 +119,4 @@ class Logger {
         });
     };
 }
-const useLogger = Logger.useLogger();
-exports.useLogger = useLogger;
+exports.Logger = Logger;
