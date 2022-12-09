@@ -7,7 +7,7 @@ const LOG_LEVEL = {
 } as const;
 type LOG_LEVEL = typeof LOG_LEVEL[keyof typeof LOG_LEVEL];
 
-class Logger {
+export default class Logger {
   private static _logger: Logger;
   private static endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
   private static logKey = process.env.npm_package_config_logger_logKey ?? 'log';
@@ -129,6 +129,3 @@ class Logger {
       });
   };
 }
-
-
-export { Logger }

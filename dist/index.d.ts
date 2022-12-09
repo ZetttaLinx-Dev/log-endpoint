@@ -1,4 +1,4 @@
-declare class Logger {
+export default class Logger {
     private static _logger;
     private static endpointUrl;
     private static logKey;
@@ -16,4 +16,3 @@ declare class Logger {
     static error: (...args: [...any]) => void;
     static send: (url?: string) => void;
 }
-export { Logger };
