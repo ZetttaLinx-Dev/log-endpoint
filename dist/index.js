@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logger = void 0;
 const LOG_LEVEL = {
     DEBUG: 0,
     INFO: 1,
@@ -140,8 +141,5 @@ class Logger {
     }
     ;
 }
-function useLogger() {
-    return new Logger();
-}
-exports.default = useLogger;
+exports.Logger = Logger;
 //# sourceMappingURL=index.js.map

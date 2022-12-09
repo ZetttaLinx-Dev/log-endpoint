@@ -3,6 +3,7 @@ declare const DEBUG_OUTPUT: {
     readonly ENDPOINT: "ENDPOINT";
 };
 type DEBUG_OUTPUT = typeof DEBUG_OUTPUT[keyof typeof DEBUG_OUTPUT];
+export { Logger };
 declare class Logger {
     private endpointUrl;
     private logKey;
@@ -22,6 +23,4 @@ declare class Logger {
     error(...args: [...any]): void;
     send(url?: string): void;
 }
-declare function useLogger(): Logger;
-export default useLogger;
 //# sourceMappingURL=index.d.ts.map

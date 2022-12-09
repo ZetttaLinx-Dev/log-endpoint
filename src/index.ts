@@ -13,6 +13,7 @@ const DEBUG_OUTPUT = {
 } as const;
 type DEBUG_OUTPUT = typeof DEBUG_OUTPUT[keyof typeof DEBUG_OUTPUT];
 
+export { Logger };
 class Logger {
   private endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
   private logKey = process.env.npm_package_config_logger_logKey ?? 'log';
@@ -145,8 +146,3 @@ class Logger {
       });
   };
 }
-
-function useLogger(): Logger {
-  return new Logger();
-}
-export default useLogger
