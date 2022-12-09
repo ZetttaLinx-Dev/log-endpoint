@@ -22,5 +22,5 @@ declare class Logger {
     error(...args: [...any]): void;
     send(url?: string): void;
 }
-export declare const logger: () => Logger;
-export {};
+declare const useLogger: () => Logger;
+export { useLogger };

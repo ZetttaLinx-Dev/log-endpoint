@@ -146,6 +146,7 @@ class Logger {
   };
 }
 
-export const logger = (): Logger =>{
+const useLogger = (): Logger =>{
   return new Logger();
 }
+export { useLogger }
