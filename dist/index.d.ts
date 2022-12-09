@@ -22,5 +22,4 @@ declare class Logger {
     error(...args: [...any]): void;
     send(url?: string): void;
 }
-declare const _default: Logger;
-export default _default;
+export { Logger };

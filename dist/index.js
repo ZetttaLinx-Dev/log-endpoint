@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Logger = void 0;
 const LOG_LEVEL = {
     DEBUG: 0,
     INFO: 1,
@@ -140,4 +141,4 @@ class Logger {
     }
     ;
 }
-exports.default = new Logger();
+exports.Logger = Logger;
