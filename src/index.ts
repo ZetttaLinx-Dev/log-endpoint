@@ -44,7 +44,7 @@ class Logger {
       }
     });
   }
-  private storeSession = (level: number, date: Date, ...args: [...any]) => {
+  private storeSession(level: number, date: Date, ...args: [...any]){
     const hasOld = sessionStorage.getItem(this.logKey) ?? false;
     const newTrace: any = [];
     if (hasOld) {
@@ -53,7 +53,7 @@ class Logger {
     newTrace.push({ date: date, level: level, details: [...args] });
     sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
   };
-  private findValueByPrefix = (object: any, prefix: any) => {
+  private findValueByPrefix(object: any, prefix: any){
     for (const property in object) {
       if (
         Object.prototype.hasOwnProperty.call(object, property) &&
@@ -64,7 +64,7 @@ class Logger {
     }
   };
 
-  public setEndPointUrl = (path: string) =>{
+  public setEndPointUrl(path: string){
     this.endpointUrl = path;
   }
 
@@ -72,7 +72,7 @@ class Logger {
     this.debugOutput = outout;
   }
 
-  public debug = (...args: [...any]) => {
+  public debug(...args: [...any]){
     const date = new Date();
     this.storeSession(LOG_LEVEL.DEBUG, date, [...args]);
     if(this.debugOutput === DEBUG_OUTPUT.CONSOLE){
@@ -84,7 +84,7 @@ class Logger {
     }
   };
 
-  public info = (...args: [...any]) => {
+  public info(...args: [...any]){
     const date = new Date();
     this.storeSession(LOG_LEVEL.INFO, date, [...args]);
     if(this.debugOutput === DEBUG_OUTPUT.CONSOLE){
@@ -96,7 +96,7 @@ class Logger {
     }
   };
 
-  public log = (...args: [...any]) => {
+  public log(...args: [...any]){
     const date = new Date();
     this.storeSession(LOG_LEVEL.LOG, date, [...args]);
     if(this.debugOutput === DEBUG_OUTPUT.CONSOLE){
@@ -108,7 +108,7 @@ class Logger {
     }
   };
 
-  public warn = (...args: [...any]) => {
+  public warn(...args: [...any]){
     const date = new Date();
     this.storeSession(LOG_LEVEL.WARN, date, [...args]);
     if(this.debugOutput === DEBUG_OUTPUT.CONSOLE){
@@ -120,7 +120,7 @@ class Logger {
     }
   };
 
-  public error = (...args: [...any]) => {
+  public error(...args: [...any]){
     const date = new Date();
     this.storeSession(LOG_LEVEL.ERROR, date, [...args]);
     if(this.debugOutput === DEBUG_OUTPUT.CONSOLE){
@@ -132,7 +132,7 @@ class Logger {
     }
   };
 
-  public send = (url?:string) => {
+  public send(url?:string){
     const body = localStorage.getItem(this.logKey) ?? '';
     fetch(url ?? this.endpointUrl, {
       body,

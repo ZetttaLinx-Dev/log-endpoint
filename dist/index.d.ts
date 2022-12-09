@@ -13,14 +13,14 @@ declare class Logger {
     constructor();
     private storeSession;
     private findValueByPrefix;
-    setEndPointUrl: (path: string) => void;
+    setEndPointUrl(path: string): void;
     onDebug(outout: DEBUG_OUTPUT): void;
-    debug: (...args: [...any]) => void;
-    info: (...args: [...any]) => void;
-    log: (...args: [...any]) => void;
-    warn: (...args: [...any]) => void;
-    error: (...args: [...any]) => void;
-    send: (url?: string) => void;
+    debug(...args: [...any]): void;
+    info(...args: [...any]): void;
+    log(...args: [...any]): void;
+    warn(...args: [...any]): void;
+    error(...args: [...any]): void;
+    send(url?: string): void;
 }
 declare const _default: Logger;
 export default _default;

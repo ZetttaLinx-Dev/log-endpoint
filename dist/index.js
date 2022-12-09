@@ -41,7 +41,7 @@ class Logger {
             }
         });
     }
-    storeSession = (level, date, ...args) => {
+    storeSession(level, date, ...args) {
         const hasOld = sessionStorage.getItem(this.logKey) ?? false;
         const newTrace = [];
         if (hasOld) {
@@ -49,22 +49,24 @@ class Logger {
         }
         newTrace.push({ date: date, level: level, details: [...args] });
         sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
-    };
-    findValueByPrefix = (object, prefix) => {
+    }
+    ;
+    findValueByPrefix(object, prefix) {
         for (const property in object) {
             if (Object.prototype.hasOwnProperty.call(object, property) &&
                 property.toString().startsWith(prefix)) {
                 return object[property];
             }
         }
-    };
-    setEndPointUrl = (path) => {
+    }
+    ;
+    setEndPointUrl(path) {
         this.endpointUrl = path;
-    };
+    }
     onDebug(outout) {
         this.debugOutput = outout;
     }
-    debug = (...args) => {
+    debug(...args) {
         const date = new Date();
         this.storeSession(LOG_LEVEL.DEBUG, date, [...args]);
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
@@ -74,8 +76,9 @@ class Logger {
             const body = JSON.stringify({ date, level: LOG_LEVEL.DEBUG, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
-    };
-    info = (...args) => {
+    }
+    ;
+    info(...args) {
         const date = new Date();
         this.storeSession(LOG_LEVEL.INFO, date, [...args]);
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
@@ -85,8 +88,9 @@ class Logger {
             const body = JSON.stringify({ date, level: LOG_LEVEL.INFO, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
-    };
-    log = (...args) => {
+    }
+    ;
+    log(...args) {
         const date = new Date();
         this.storeSession(LOG_LEVEL.LOG, date, [...args]);
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
@@ -96,8 +100,9 @@ class Logger {
             const body = JSON.stringify({ date, level: LOG_LEVEL.LOG, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
-    };
-    warn = (...args) => {
+    }
+    ;
+    warn(...args) {
         const date = new Date();
         this.storeSession(LOG_LEVEL.WARN, date, [...args]);
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
@@ -107,8 +112,9 @@ class Logger {
             const body = JSON.stringify({ date, level: LOG_LEVEL.WARN, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
-    };
-    error = (...args) => {
+    }
+    ;
+    error(...args) {
         const date = new Date();
         this.storeSession(LOG_LEVEL.ERROR, date, [...args]);
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
@@ -118,8 +124,9 @@ class Logger {
             const body = JSON.stringify({ date, level: LOG_LEVEL.ERROR, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
-    };
-    send = (url) => {
+    }
+    ;
+    send(url) {
         const body = localStorage.getItem(this.logKey) ?? '';
         fetch(url ?? this.endpointUrl, {
             body,
@@ -130,6 +137,7 @@ class Logger {
             .catch(() => {
             window.alert('ログの送信に失敗しました');
         });
-    };
+    }
+    ;
 }
 exports.default = new Logger();
