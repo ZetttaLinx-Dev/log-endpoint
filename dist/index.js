@@ -145,3 +145,4 @@ const useLogger = () => {
     return new Logger();
 };
 exports.useLogger = useLogger;
+//# sourceMappingURL=index.js.map

@@ -24,3 +24,4 @@ declare class Logger {
 }
 declare const useLogger: () => Logger;
 export { useLogger };
+//# sourceMappingURL=index.d.ts.map
