@@ -22,6 +22,6 @@ declare class Logger {
     error(...args: [...any]): void;
     send(url?: string): void;
 }
-declare const useLogger: () => Logger;
-export { useLogger };
+declare function useLogger(): Logger;
+export default useLogger;
 //# sourceMappingURL=index.d.ts.map
