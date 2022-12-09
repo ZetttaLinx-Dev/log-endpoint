@@ -13,7 +13,7 @@ class Logger {
     static logKey = process.env.npm_package_config_logger_logKey ?? 'log';
     static outputLocalStorageLevel = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
     static outputEndpointLevel = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
-    static get getInstance() {
+    static get getLogger() {
         if (!this._logger) {
             this._logger = new Logger();
         }
@@ -118,4 +118,4 @@ class Logger {
         });
     };
 }
-exports.default = Logger.getInstance;
+exports.default = Logger;

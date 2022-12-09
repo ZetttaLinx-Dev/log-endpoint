@@ -14,7 +14,7 @@ class Logger {
   private static outputLocalStorageLevel: string = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
   private static outputEndpointLevel: string = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
 
-  public static get getInstance(): Logger {
+  public static get getLogger(): Logger {
     if (!this._logger) {
       this._logger = new Logger();
     }
@@ -131,4 +131,4 @@ class Logger {
 }
 
 
-export default Logger.getInstance
+export default Logger
