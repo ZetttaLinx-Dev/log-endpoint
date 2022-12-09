@@ -7,50 +7,42 @@ const LOG_LEVEL = {
 } as const;
 type LOG_LEVEL = typeof LOG_LEVEL[keyof typeof LOG_LEVEL];
 
-export default class Logger {
-  private static _logger: Logger;
-  private static endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
-  private static logKey = process.env.npm_package_config_logger_logKey ?? 'log';
-  private static outputLocalStorageLevel: string = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
-  private static outputEndpointLevel: string = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
+class Logger {
+  private endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
+  private logKey = process.env.npm_package_config_logger_logKey ?? 'log';
+  private outputLocalStorageLevel: string = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
+  private outputEndpointLevel: string = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR'; 
 
-  public static useLogger(): Logger {
-    if (!this._logger) {
-      this._logger = new Logger();
-    }
-    return this._logger;
-  }
-
-  private constructor() {
+  public constructor() {
     window.addEventListener('unload', () => {
-      const sessionLog = sessionStorage.getItem(Logger.logKey);
+      const sessionLog = sessionStorage.getItem(this.logKey);
       if (sessionLog) {
         const log = JSON.parse(sessionLog);
         const saveLog = log.filter((trace: any) => {
-          return Logger.findValueByPrefix(LOG_LEVEL, Logger.outputLocalStorageLevel) < trace.level;
+          return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) < trace.level;
         });
         if (saveLog.length > 0) {
-          const hasOld = localStorage.getItem(Logger.logKey) ?? false;
+          const hasOld = localStorage.getItem(this.logKey) ?? false;
           const newTrace: any = [];
           if (hasOld) {
-            newTrace.concat(JSON.parse(localStorage.getItem(Logger.logKey) ?? ''));
+            newTrace.concat(JSON.parse(localStorage.getItem(this.logKey) ?? ''));
           }
           newTrace.concat(saveLog);
-          localStorage.setItem(Logger.logKey, JSON.stringify(newTrace));
+          localStorage.setItem(this.logKey, JSON.stringify(newTrace));
         }
       }
     });
   }
-  private static storeSession = (level: number, date: Date, ...args: [...any]) => {
-    const hasOld = sessionStorage.getItem(Logger.logKey) ?? false;
+  private storeSession = (level: number, date: Date, ...args: [...any]) => {
+    const hasOld = sessionStorage.getItem(this.logKey) ?? false;
     const newTrace: any = [];
     if (hasOld) {
-      newTrace.concat(JSON.parse(sessionStorage.getItem(Logger.logKey) ?? ''));
+      newTrace.concat(JSON.parse(sessionStorage.getItem(this.logKey) ?? ''));
     }
     newTrace.push({ date: date, level: level, details: [...args] });
-    sessionStorage.setItem(Logger.logKey, JSON.stringify(newTrace));
+    sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
   };
-  private static findValueByPrefix = (object: any, prefix: any) => {
+  private findValueByPrefix = (object: any, prefix: any) => {
     for (const property in object) {
       if (
         Object.prototype.hasOwnProperty.call(object, property) &&
@@ -61,64 +53,64 @@ export default class Logger {
     }
   };
 
-  static setEndPointUrl = (path: string) =>{
-    Logger.endpointUrl = path;
+  public setEndPointUrl = (path: string) =>{
+    this.endpointUrl = path;
   }
 
-  static debug = (...args: [...any]) => {
+  public debug = (...args: [...any]) => {
     console.info([...args]);
     const date = new Date();
     this.storeSession(LOG_LEVEL.INFO, date, [...args]);
-    if (this.findValueByPrefix(LOG_LEVEL, Logger.outputEndpointLevel) <= LOG_LEVEL.DEBUG) {
+    if (this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.DEBUG) {
       const body = JSON.stringify({ date, level: LOG_LEVEL.ERROR, details: [...args] });
-      fetch(Logger.endpointUrl, { body });
+      fetch(this.endpointUrl, { body });
     }
   };
 
-  static info = (...args: [...any]) => {
+  public info = (...args: [...any]) => {
     console.info([...args]);
     const date = new Date();
     this.storeSession(LOG_LEVEL.INFO, date, [...args]);
-    if (this.findValueByPrefix(LOG_LEVEL, Logger.outputEndpointLevel) <= LOG_LEVEL.INFO) {
+    if (this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.INFO) {
       const body = JSON.stringify({ date, level: LOG_LEVEL.ERROR, details: [...args] });
-      fetch(Logger.endpointUrl, { body });
+      fetch(this.endpointUrl, { body });
     }
   };
 
-  static log = (...args: [...any]) => {
+  public log = (...args: [...any]) => {
     console.log([...args]);
     const date = new Date();
     this.storeSession(LOG_LEVEL.LOG, date, [...args]);
-    if (this.findValueByPrefix(LOG_LEVEL, Logger.outputEndpointLevel) <= LOG_LEVEL.LOG) {
+    if (this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.LOG) {
       const body = JSON.stringify({ date, level: LOG_LEVEL.ERROR, details: [...args] });
-      fetch(Logger.endpointUrl, { body });
+      fetch(this.endpointUrl, { body });
     }
   };
 
-  static warn = (...args: [...any]) => {
+  public warn = (...args: [...any]) => {
     console.log([...args]);
     const date = new Date();
     this.storeSession(LOG_LEVEL.WARN, date, [...args]);
-    if (this.findValueByPrefix(LOG_LEVEL, Logger.outputEndpointLevel) <= LOG_LEVEL.WARN) {
+    if (this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.WARN) {
       const body = JSON.stringify({ date, level: LOG_LEVEL.ERROR, details: [...args] });
-      fetch(Logger.endpointUrl, { body });
+      fetch(this.endpointUrl, { body });
     }
   };
 
-  static error = (...args: [...any]) => {
+  public error = (...args: [...any]) => {
     console.error([...args]);
     const date = new Date();
     this.storeSession(LOG_LEVEL.ERROR, date, [...args]);
-    if (this.findValueByPrefix(LOG_LEVEL, Logger.outputEndpointLevel) <= LOG_LEVEL.ERROR) {
+    if (this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.ERROR) {
       const date = new Date();
       const body = JSON.stringify({ date: date, level: LOG_LEVEL.ERROR, details: [...args] });
-      fetch(Logger.endpointUrl, { body });
+      fetch(this.endpointUrl, { body });
     }
   };
 
-  static send = (url?:string) => {
-    const body = localStorage.getItem(Logger.logKey) ?? '';
-    fetch(url ?? Logger.endpointUrl, {
+  public send = (url?:string) => {
+    const body = localStorage.getItem(this.logKey) ?? '';
+    fetch(url ?? this.endpointUrl, {
       body,
     })
       .then(() => {
@@ -129,3 +121,5 @@ export default class Logger {
       });
   };
 }
+
+export default new Logger();
