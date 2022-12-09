@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.useLogger = void 0;
 const LOG_LEVEL = {
     DEBUG: 0,
     INFO: 1,
@@ -13,7 +14,7 @@ class Logger {
     static logKey = process.env.npm_package_config_logger_logKey ?? 'log';
     static outputLocalStorageLevel = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
     static outputEndpointLevel = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
-    static get getLogger() {
+    static useLogger() {
         if (!this._logger) {
             this._logger = new Logger();
         }
@@ -118,4 +119,5 @@ class Logger {
         });
     };
 }
-exports.default = Logger;
+const useLogger = Logger.useLogger();
+exports.useLogger = useLogger;

@@ -4,7 +4,7 @@ declare class Logger {
     private static logKey;
     private static outputLocalStorageLevel;
     private static outputEndpointLevel;
-    static get getLogger(): Logger;
+    static useLogger(): Logger;
     private constructor();
     private static storeSession;
     private static findValueByPrefix;
@@ -16,4 +16,5 @@ declare class Logger {
     static error: (...args: [...any]) => void;
     static send: (url?: string) => void;
 }
-export default Logger;
+declare const useLogger: Logger;
+export { useLogger };
