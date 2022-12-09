@@ -23,36 +23,42 @@ class Logger {
   private debugOutput = sessionStorage.getItem('min-logger-debug-flag');
 
   public constructor() {
+    console.log(this.logKey);
     window.addEventListener('unload', () => {
       const sessionLog = sessionStorage.getItem(this.logKey);
-      if (sessionLog) {
-        const log = JSON.parse(sessionLog);
-        const saveLog = log.filter((trace: any) => {
-          return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) < trace.level;
-        });
-        if (saveLog.length > 0) {
-          const hasOld = localStorage.getItem(this.logKey) ?? false;
-          const newTrace: any[] = [];
-          if (hasOld) {
-            newTrace.concat(JSON.parse(localStorage.getItem(this.logKey) ?? ''));
-          }
-          newTrace.concat(saveLog);
-          if(newTrace.length > this.maxLogLocalStorage){
-            newTrace.splice(0, newTrace.length - this.maxLogLocalStorage);
-          }
-          localStorage.setItem(this.logKey, JSON.stringify(newTrace));
-        }
+      if (!sessionLog) {
+        return;
+      }
+      const log = JSON.parse(sessionLog);
+      const saveLog = log.filter((trace: any) => {//保存すべきログの抽出
+        return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) < trace.level;
+      });
+      if (saveLog.length === 0) {
+        return;
+      }
+
+      const oldTrace = localStorage.getItem(this.logKey) ?? false;
+      if (oldTrace !== false) {
+        const newTrace = (JSON.parse(oldTrace)).concat(saveLog);
+        localStorage.setItem(this.logKey, JSON.stringify(newTrace));
+      }else{
+        localStorage.setItem(this.logKey, JSON.stringify(saveLog))
+      }
+      const trace = JSON.parse(localStorage.getItem(this.logKey) ?? '')
+      if(trace.length > this.maxLogLocalStorage){
+        trace.splice(0, trace.length - this.maxLogLocalStorage);
+        localStorage.setItem(this.logKey, JSON.stringify(trace));
       }
     });
   }
   private storeSession(level: number, date: Date, ...args: [...any]){
-    const hasOld = sessionStorage.getItem(this.logKey) ?? false;
-    const newTrace: any = [];
-    if (hasOld) {
-      newTrace.concat(JSON.parse(sessionStorage.getItem(this.logKey) ?? ''));
+    const oldTrace = sessionStorage.getItem(this.logKey) ?? false;
+    if (oldTrace !== false) {
+      const newTrace = (JSON.parse(oldTrace)).push({ date: date, level: level, details: [...args] })
+      sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
+    }else{
+      sessionStorage.setItem(this.logKey, JSON.stringify([{ date: date, level: level, details: [...args] }]))
     }
-    newTrace.push({ date: date, level: level, details: [...args] });
-    sessionStorage.setItem(this.logKey, JSON.stringify(newTrace));
   };
   private findValueByPrefix(object: any, prefix: any){
     for (const property in object) {
