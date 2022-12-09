@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Logger = void 0;
 const LOG_LEVEL = {
     DEBUG: 0,
     INFO: 1,
@@ -12,6 +9,7 @@ const DEBUG_OUTPUT = {
     CONSOLE: "CONSOLE",
     ENDPOINT: "ENDPOINT",
 };
+export { Logger };
 class Logger {
     endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
     logKey = process.env.npm_package_config_logger_logKey ?? 'log';
@@ -141,5 +139,4 @@ class Logger {
     }
     ;
 }
-exports.Logger = Logger;
 //# sourceMappingURL=index.js.map
