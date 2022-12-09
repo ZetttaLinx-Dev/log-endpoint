@@ -13,7 +13,7 @@ const DEBUG_OUTPUT = {
 } as const;
 type DEBUG_OUTPUT = typeof DEBUG_OUTPUT[keyof typeof DEBUG_OUTPUT];
 
-export default class Logger {
+class Logger {
   private endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
   private logKey = process.env.npm_package_config_logger_logKey ?? 'log';
   private outputLocalStorageLevel: string = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
@@ -144,4 +144,8 @@ export default class Logger {
         window.alert('ログの送信に失敗しました');
       });
   };
+}
+
+export const logger = (): Logger =>{
+  return new Logger();
 }
