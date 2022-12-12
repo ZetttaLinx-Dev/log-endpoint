@@ -6,8 +6,8 @@
 
 ```Typescript
 import { MinLogger } from 'min-logger'
-const logger = new MinLogger();
-logger.log('This is','how to use', 'min-logger')
+const minLogger = new MinLogger();
+minLogger.log('This is','how to use', 'min-logger')
 ```
 
 - SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'unload'イベントにフックされています。
