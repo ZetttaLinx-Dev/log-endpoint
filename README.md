@@ -52,20 +52,6 @@ const minLogger = new MinLogger();
 minLogger.onDebug(DEBUG_OUTPUT.CONSOLE); //引数にDEBUG_OUTPUT.CONSOLE or DEBUG_OUTPUT.ENDPOINTを指定できます。
 ```
 
-- プロジェクトのルートディレクトリに`min-logger.config.js`を配置することにより以下の config を設定可能です。
-
-```Typescript
-const { defineConfig, LOG_LEVEL } = require('min-logger');
-module.exports = defineConfig({
-  endpointUrl: '',//ポストするエンドポイントのURLを指定します。規定値は空です。
-  logKey: 'log', // StorageAPIに格納する際のkeyを指定します。規定値は'log'です。
-  outputLocalStorageLevel: LOG_LEVEL.WARN, // localStorageに格納するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能です。規定値はLOG_LEVEL.WARNです。
-  outputEndpointLevel: LOG_LEVEL.ERROR, // エンドポイントに出力するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能です。規定値はLOG_LEVEL.ERRORです。
-  maxLogLocalStorage: 300 // localStorageに格納する最大数を指定します。整数値を指定可能です。規定値は300です。
-});
-
-```
-
 - ログは下記のオブジェクトで出力されます。StorageAPI にはこのオブジェクトが配列で格納されます。
 
 ```js
@@ -84,4 +70,18 @@ const LOG_LEVEL = {
   WARN: 3,
   ERROR: 4,
 };
+```
+# 設定
+- プロジェクトのルートディレクトリに`min-logger.config.js`を配置することにより以下の config を設定可能です。
+
+```Typescript
+const { defineConfig, LOG_LEVEL } = require('min-logger');
+module.exports = defineConfig({
+  endpointUrl: '',//ポストするエンドポイントのURLを指定します。規定値は空です。
+  logKey: 'log', // StorageAPIに格納する際のkeyを指定します。規定値は'log'です。
+  outputLocalStorageLevel: LOG_LEVEL.WARN, // localStorageに格納するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能です。規定値はLOG_LEVEL.WARNです。
+  outputEndpointLevel: LOG_LEVEL.ERROR, // エンドポイントに出力するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能です。規定値はLOG_LEVEL.ERRORです。
+  maxLogLocalStorage: 300 // localStorageに格納する最大数を指定します。整数値を指定可能です。規定値は300です。
+});
+
 ```
