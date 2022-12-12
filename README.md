@@ -49,7 +49,7 @@ minLogger.send();
 ```Typescript
 import { MinLogger, DEBUG_OUTPUT } from 'min-logger'
 const minLogger = new MinLogger();
-minLogger.debugOn(DEBUG_OUTPUT.CONSOLE); //引数にDEBUG_OUTPUT.CONSOLE or DEBUG_OUTPUT.ENDPOINTを指定できます。
+minLogger.onDebug(DEBUG_OUTPUT.CONSOLE); //引数にDEBUG_OUTPUT.CONSOLE or DEBUG_OUTPUT.ENDPOINTを指定できます。
 ```
 
 - プロジェクトのルートディレクトリに`min-logger.config.js`を配置することにより以下の config を設定可能です。
