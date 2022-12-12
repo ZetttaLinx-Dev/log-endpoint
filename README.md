@@ -41,6 +41,7 @@ import { MinLogger } from 'min-logger'
 const minLogger = new MinLogger();
 minLogger.send();
 // 実行後window.alert()「ログを送信しました」or「ログの送信に失敗しました」というメッセージが表示されます。
+// 引数に特定のURLを指定するとことによって設定値以外のエンドポイントに送信することもできます。
 ```
 
 - 一時的に全てのログを console に出力、もしくはエンドポイント URL に送信できます。
