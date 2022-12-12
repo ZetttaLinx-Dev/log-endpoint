@@ -21,16 +21,13 @@ class MinLogger {
     maxLogLocalStorage = 300;
     debugOutput = sessionStorage.getItem('min-logger-debug-flag');
     constructor() {
-        console.log(process.env.BASE_URL);
         try {
-            const config = require(process.env.BASE_URL + '/min-logger.config');
-            console.log(config);
-            const userConfig = config.defineConfig;
+            const userConfig = require(process.env.BASE_URL + 'min-logger.config');
             this.endpointUrl = userConfig.endpointUrl ?? this.endpointUrl;
             this.logKey = userConfig.logKey ?? this.logKey;
             this.outputLocalStorageLevel = userConfig.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
             this.outputEndpointLevel = userConfig.outputEndpointLevel ?? this.outputEndpointLevel;
-            this.maxLogLocalStorage = userConfig.outputEndpointLevel ?? this.maxLogLocalStorage;
+            this.maxLogLocalStorage = userConfig.maxLogLocalStorage ?? this.maxLogLocalStorage;
         }
         catch {
             // 規定値の使用
