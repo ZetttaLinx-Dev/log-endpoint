@@ -75,7 +75,7 @@ class MinLogger {
     }
   };
 
-  public setEndPointUrl(path: string){
+  public setEndpointUrl(path: string){
     this.endpointUrl = path;
   }
 
