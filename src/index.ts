@@ -50,18 +50,17 @@ class MinLogger {
           return;
       }
       const oldTrace = localStorage.getItem(this.logKey) ?? false;
+      let trace :[];
       if (!oldTrace) {
-        localStorage.setItem(this.logKey, JSON.stringify(saveLog));
+        trace = saveLog;
       }
       else {
-        const newTrace = JSON.parse(oldTrace).concat(saveLog);
-        localStorage.setItem(this.logKey, JSON.stringify(newTrace));
+        trace = JSON.parse(oldTrace).concat(saveLog);
       }
-      const trace = JSON.parse(localStorage.getItem(this.logKey) ?? '');
       if (trace.length > this.maxLogLocalStorage) {
           trace.splice(0, trace.length - this.maxLogLocalStorage);
-          localStorage.setItem(this.logKey, JSON.stringify(trace));
       }
+      localStorage.setItem(this.logKey, JSON.stringify(trace));
     });
   }
   private storeSession(level: number, date: Date, ...args: [...any]){
