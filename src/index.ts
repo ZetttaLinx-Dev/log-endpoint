@@ -4,6 +4,7 @@ const LOG_LEVEL = {
   LOG: 2,
   WARN: 3,
   ERROR: 4,
+  NONE:100,
 } as const;
 type LOG_LEVEL = typeof LOG_LEVEL[keyof typeof LOG_LEVEL];
 
@@ -23,7 +24,8 @@ class MinLogger {
   private logKey = 'log';
   private outputLocalStorageLevel: number = LOG_LEVEL.WARN;
   private outputEndpointLevel: number = LOG_LEVEL.ERROR;
-  private maxLogLocalStorage: number = 300; 
+  private maxLogLocalStorage: number = 300;
+  private unhandledErrorLevel: number = LOG_LEVEL.WARN;
   private debugOutput = sessionStorage.getItem('min-logger-debug-flag');
 
   public constructor() {
@@ -33,10 +35,16 @@ class MinLogger {
       this.logKey = userConfig.logKey ?? this.logKey;
       this.outputLocalStorageLevel = userConfig.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
       this.outputEndpointLevel = userConfig.outputEndpointLevel ?? this.outputEndpointLevel;
+      this.unhandledErrorLevel = userConfig.unhandledErrorLevel ?? this.unhandledErrorLevel;
       this.maxLogLocalStorage = userConfig.maxLogLocalStorage ?? this.maxLogLocalStorage;
     }catch{
       // 規定値の使用
     }
+    // 未処理の例外をキャッチする
+    window.addEventListener('error',(event: ErrorEvent)=>{
+      this.storeSession(this.unhandledErrorLevel, new Date(),  `${event.type}: ${event.message}`)
+    })
+    // localStorageに格納する
     window.addEventListener('beforeunload', () => {
       const sessionLog = sessionStorage.getItem(this.logKey);
       if (sessionLog === null) {
@@ -144,7 +152,10 @@ class MinLogger {
   };
 
   public send(url?:string){
-    const body = localStorage.getItem(this.logKey) ?? '';
+    const local = localStorage.getItem(this.logKey) ?? '';
+    const session = sessionStorage.getItem(this.logKey) ?? '';
+    const trace = JSON.parse(local).concat(JSON.parse(session));
+    const body = JSON.stringify(trace);
     fetch(url ?? this.endpointUrl, {
       body,
     })
