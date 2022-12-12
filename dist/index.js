@@ -9,16 +9,32 @@ const DEBUG_OUTPUT = {
     CONSOLE: "CONSOLE",
     ENDPOINT: "ENDPOINT",
 };
-export { Logger };
-class Logger {
-    endpointUrl = process.env.npm_package_config_logger_endpointUrl ?? '';
-    logKey = process.env.npm_package_config_logger_logKey ?? 'log';
-    outputLocalStorageLevel = process.env.npm_package_config_logger_outputLocal ?? 'WARN';
-    outputEndpointLevel = process.env.npm_package_config_logger_outputEndpoint ?? 'ERROR';
-    maxLogLocalStorage = Number(process.env.npm_package_config_logger_maxLogLocalStorage) ?? 300;
+function defineConfig(config) {
+    return config;
+}
+export { MinLogger, LOG_LEVEL, DEBUG_OUTPUT, defineConfig };
+class MinLogger {
+    endpointUrl = '';
+    logKey = 'log';
+    outputLocalStorageLevel = LOG_LEVEL.WARN;
+    outputEndpointLevel = LOG_LEVEL.ERROR;
+    maxLogLocalStorage = 300;
     debugOutput = sessionStorage.getItem('min-logger-debug-flag');
     constructor() {
-        console.log(this.logKey);
+        console.log(process.env.BASE_URL);
+        try {
+            const config = require(process.env.BASE_URL + '/min-logger.config');
+            console.log(config);
+            const userConfig = config.defineConfig;
+            this.endpointUrl = userConfig.endpointUrl ?? this.endpointUrl;
+            this.logKey = userConfig.logKey ?? this.logKey;
+            this.outputLocalStorageLevel = userConfig.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
+            this.outputEndpointLevel = userConfig.outputEndpointLevel ?? this.outputEndpointLevel;
+            this.maxLogLocalStorage = userConfig.outputEndpointLevel ?? this.maxLogLocalStorage;
+        }
+        catch {
+            // 規定値の使用
+        }
         window.addEventListener('unload', () => {
             const sessionLog = sessionStorage.getItem(this.logKey);
             if (sessionLog === null) {
