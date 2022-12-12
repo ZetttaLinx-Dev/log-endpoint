@@ -10,7 +10,7 @@ const minLogger = new MinLogger();
 minLogger.log('This is','how to use', 'min-logger')
 ```
 
-- SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'unload'イベントにフックされています。
+- SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'beforeunload'イベントにフックされています。
 
 # インストール
 
@@ -71,7 +71,9 @@ const LOG_LEVEL = {
   ERROR: 4,
 };
 ```
+
 # 設定
+
 - プロジェクトのルートディレクトリに`min-logger.config.js`を配置することにより以下の config を設定可能です。
 
 ```Typescript

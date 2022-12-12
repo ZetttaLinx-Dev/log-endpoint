@@ -22,7 +22,6 @@ declare class MinLogger {
     private debugOutput;
     constructor();
     private storeSession;
-    private findValueByPrefix;
     setEndPointUrl(path: string): void;
     onDebug(outout: DEBUG_OUTPUT): void;
     debug(...args: [...any]): void;

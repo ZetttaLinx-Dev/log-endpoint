@@ -32,14 +32,14 @@ class MinLogger {
         catch {
             // 規定値の使用
         }
-        window.addEventListener('unload', () => {
+        window.addEventListener('beforeunload', () => {
             const sessionLog = sessionStorage.getItem(this.logKey);
             if (sessionLog === null) {
                 return;
             }
             const log = JSON.parse(sessionLog);
             const saveLog = log.filter((trace) => {
-                return this.findValueByPrefix(LOG_LEVEL, this.outputLocalStorageLevel) <= trace.level;
+                return this.outputLocalStorageLevel <= trace.level;
             });
             if (saveLog.length === 0) {
                 return;
@@ -71,15 +71,6 @@ class MinLogger {
         }
     }
     ;
-    findValueByPrefix(object, prefix) {
-        for (const property in object) {
-            if (Object.prototype.hasOwnProperty.call(object, property) &&
-                property.toString().startsWith(prefix)) {
-                return object[property];
-            }
-        }
-    }
-    ;
     setEndPointUrl(path) {
         this.endpointUrl = path;
     }
@@ -92,7 +83,7 @@ class MinLogger {
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
             console.info([...args]);
         }
-        if (this.endpointUrl !== '' && this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.DEBUG || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
+        if (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.DEBUG || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
             const body = JSON.stringify({ date, level: LOG_LEVEL.DEBUG, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
@@ -104,7 +95,7 @@ class MinLogger {
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
             console.info([...args]);
         }
-        if (this.endpointUrl !== '' && this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.INFO || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
+        if (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.INFO || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
             const body = JSON.stringify({ date, level: LOG_LEVEL.INFO, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
@@ -116,7 +107,7 @@ class MinLogger {
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
             console.log([...args]);
         }
-        if (this.endpointUrl !== '' && this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.LOG || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
+        if (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.LOG || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
             const body = JSON.stringify({ date, level: LOG_LEVEL.LOG, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
@@ -128,7 +119,7 @@ class MinLogger {
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
             console.warn([...args]);
         }
-        if (this.endpointUrl !== '' && this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.WARN || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
+        if (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.WARN || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
             const body = JSON.stringify({ date, level: LOG_LEVEL.WARN, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
@@ -140,7 +131,7 @@ class MinLogger {
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
             console.error([...args]);
         }
-        if (this.endpointUrl !== '' && this.findValueByPrefix(LOG_LEVEL, this.outputEndpointLevel) <= LOG_LEVEL.ERROR || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
+        if (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.ERROR || this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
             const body = JSON.stringify({ date, level: LOG_LEVEL.ERROR, details: [...args] });
             fetch(this.endpointUrl, { body });
         }
