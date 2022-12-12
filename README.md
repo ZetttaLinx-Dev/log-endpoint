@@ -14,8 +14,6 @@ logger.log('This is','how to use', 'min-logger')
 
 # インストール
 
-- npm/yarn からインストール可能です。
-
 ```
 npm i git+https://github.com/ter4uchi/min-logger.git
 // or
@@ -36,7 +34,7 @@ minLogger.warn('warn')
 minLogger.error('error')
 ```
 
-- StorageAPI 内に保存してあるログをユーザー操作により指定したエンドポイント URL へ送信可能です。
+- StorageAPI 内に保存してあるログをユーザー操作により指定したエンドポイントへ送信可能です。
 
 ```Typescript
 import { MinLogger } from 'min-logger'
