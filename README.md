@@ -10,7 +10,7 @@ const logger = new MinLogger();
 logger.log('This is','how to use', 'min-logger')
 ```
 
-- SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す。またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'unload'イベントにフックされています。
+- SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'unload'イベントにフックされています。
 
 # インストール
 
