@@ -11,6 +11,7 @@ minLogger.log('This is','how to use', 'min-logger')
 ```
 
 - SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'beforeunload'イベントにフックされています。
+- SessionStotageには通常保存しておくことはしない/してはいけない（GAS経由で吸い上げたドキュメントの内容など）が、エラー解析の際に必要となるデータを格納しておきます。
 
 # インストール
 
