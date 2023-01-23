@@ -149,20 +149,19 @@ class MinLogger {
     this.debugOutput = output;
   }
 
-  public debug(...args: [...any]) {
+  private logging(level: LOG_LEVEL, ...args: [...any]) {
     const date = new Date();
-    this.storeSession(LOG_LEVEL.DEBUG, date, ...args);
+    this.storeSession(level, date, ...args);
     if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
       console.info([...args]);
     }
     if (
-      (this.endpointUrl !== '' &&
-        this.outputEndpointLevel <= LOG_LEVEL.DEBUG) ||
+      (this.endpointUrl !== '' && this.outputEndpointLevel <= level) ||
       this.debugOutput === DEBUG_OUTPUT.ENDPOINT
     ) {
       const body = JSON.stringify({
         date,
-        level: LOG_LEVEL.DEBUG,
+        level: level,
         details: [...args],
       });
       fetch(this.endpointUrl, {
@@ -174,109 +173,26 @@ class MinLogger {
         body: JSON.stringify([body]),
       });
     }
+  }
+
+  public debug(...args: [...any]) {
+    this.logging(LOG_LEVEL.DEBUG, ...args);
   }
 
   public info(...args: [...any]) {
-    const date = new Date();
-    this.storeSession(LOG_LEVEL.INFO, date, ...args);
-    if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-      console.info([...args]);
-    }
-    if (
-      (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.INFO) ||
-      this.debugOutput === DEBUG_OUTPUT.ENDPOINT
-    ) {
-      const body = JSON.stringify({
-        date,
-        level: LOG_LEVEL.INFO,
-        details: [...args],
-      });
-      fetch(this.endpointUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify([body]),
-      });
-    }
+    this.logging(LOG_LEVEL.INFO, ...args);
   }
 
   public log(...args: [...any]) {
-    const date = new Date();
-    this.storeSession(LOG_LEVEL.LOG, date, [...args]);
-    if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-      console.log([...args]);
-    }
-    if (
-      (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.LOG) ||
-      this.debugOutput === DEBUG_OUTPUT.ENDPOINT
-    ) {
-      const body = JSON.stringify({
-        date,
-        level: LOG_LEVEL.LOG,
-        details: [...args],
-      });
-      fetch(this.endpointUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify([body]),
-      });
-    }
+    this.logging(LOG_LEVEL.LOG, ...args);
   }
 
   public warn(...args: [...any]) {
-    const date = new Date();
-    this.storeSession(LOG_LEVEL.WARN, date, ...args);
-    if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-      console.warn([...args]);
-    }
-    if (
-      (this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.WARN) ||
-      this.debugOutput === DEBUG_OUTPUT.ENDPOINT
-    ) {
-      const body = JSON.stringify({
-        date,
-        level: LOG_LEVEL.WARN,
-        details: [...args],
-      });
-      fetch(this.endpointUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify([body]),
-      });
-    }
+    this.logging(LOG_LEVEL.WARN, ...args);
   }
 
   public error(...args: [...any]) {
-    const date = new Date();
-    this.storeSession(LOG_LEVEL.ERROR, date, ...args);
-    if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-      console.error([...args]);
-    }
-    if (
-      (this.endpointUrl !== '' &&
-        this.outputEndpointLevel <= LOG_LEVEL.ERROR) ||
-      this.debugOutput === DEBUG_OUTPUT.ENDPOINT
-    ) {
-      const body = JSON.stringify([
-        { date, level: LOG_LEVEL.ERROR, details: [...args] },
-      ]);
-      fetch(this.endpointUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify([body]),
-      });
-    }
+    this.logging(LOG_LEVEL.ERROR, ...args);
   }
 
   public async send(url?: string) {
