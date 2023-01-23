@@ -4,4 +4,5 @@ interface UserConfig{
   outputLocalStorageLevel?: number,
   outputEndpointLevel?: number,
   maxLogLocalStorage?: number,
+  unhandledErrorLevel?:number,
 }
