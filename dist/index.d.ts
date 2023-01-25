@@ -24,15 +24,20 @@ declare class MinLogger {
     private debugOutput;
     constructor();
     /**
-     *
-     * @param configUrl 外部設定値のURL
-     * @returns
+     * 外部config注入用
+     * @param {string} configUrl 外部設定値のURL
      */
-    static build(configUrl?: string): Promise<MinLogger>;
+    injectConfig(configUrl: string): Promise<void>;
+    /**
+     * SessionStorageに格納する
+     * @param {number} level ログレベル
+     * @param {Date} date 日付
+     * @param {...any} args ログ内容
+     */
     private storeSession;
     /**
      * エンドポイントURL変更用
-     * @param path
+     * @param {string} path
      */
     setEndpointUrl(path: string): void;
     /**
@@ -40,6 +45,12 @@ declare class MinLogger {
      * @param  {"CONSOLE" | "ENDPOINT"} output 出力先
      */
     onDebug(output: DEBUG_OUTPUT): void;
+    /**
+     * ロギング関数
+     * @param level
+     * @param args
+     */
+    private logging;
     debug(...args: [...any]): void;
     info(...args: [...any]): void;
     log(...args: [...any]): void;

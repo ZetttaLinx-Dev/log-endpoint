@@ -24,8 +24,7 @@ class MinLogger {
     debugOutput = sessionStorage.getItem('min-logger-debug-flag');
     constructor() {
         try {
-            const userConfig = require(process.env.BASE_URL +
-                'min-logger.config');
+            const userConfig = require(`${process.env.BASE_URL}min-logger.config`);
             this.endpointUrl = userConfig.endpointUrl ?? this.endpointUrl;
             this.logKey = userConfig.logKey ?? this.logKey;
             this.outputLocalStorageLevel =
@@ -72,43 +71,40 @@ class MinLogger {
         });
     }
     /**
-     *
-     * @param configUrl 外部設定値のURL
-     * @returns
+     * 外部config注入用
+     * @param {string} configUrl 外部設定値のURL
      */
-    static async build(configUrl) {
-        const minLogger = new MinLogger();
-        if (configUrl) {
-            await fetch(configUrl)
-                .then((res) => {
-                return res.json();
-            })
-                .then((config) => {
-                minLogger.endpointUrl =
-                    config.endpointUrl ?? minLogger.endpointUrl;
-                minLogger.logKey = config.logKey ?? minLogger.logKey;
-                minLogger.outputLocalStorageLevel =
-                    config.outputLocalStorageLevel ??
-                        minLogger.outputLocalStorageLevel;
-                minLogger.outputEndpointLevel =
-                    config.outputEndpointLevel ??
-                        minLogger.outputEndpointLevel;
-                minLogger.unhandledErrorLevel =
-                    config.unhandledErrorLevel ??
-                        minLogger.unhandledErrorLevel;
-                minLogger.maxLogLocalStorage =
-                    config.maxLogLocalStorage ??
-                        minLogger.maxLogLocalStorage;
-            })
-                .catch((e) => {
-                minLogger.storeSession(LOG_LEVEL.WARN, new Date(), e.name, e.message);
-            })
-                .finally(() => {
-                return minLogger;
-            });
-        }
-        return minLogger;
+    async injectConfig(configUrl) {
+        await fetch(configUrl)
+            .then((res) => {
+            return res.json();
+        })
+            .then((config) => {
+            this.endpointUrl =
+                config.endpointUrl ?? this.endpointUrl;
+            this.logKey = config.logKey ?? this.logKey;
+            this.outputLocalStorageLevel =
+                config.outputLocalStorageLevel ??
+                    this.outputLocalStorageLevel;
+            this.outputEndpointLevel =
+                config.outputEndpointLevel ??
+                    this.outputEndpointLevel;
+            this.unhandledErrorLevel =
+                config.unhandledErrorLevel ??
+                    this.unhandledErrorLevel;
+            this.maxLogLocalStorage =
+                config.maxLogLocalStorage ?? this.maxLogLocalStorage;
+        })
+            .catch((e) => {
+            this.storeSession(LOG_LEVEL.WARN, new Date(), e.name, e.message);
+        });
     }
+    /**
+     * SessionStorageに格納する
+     * @param {number} level ログレベル
+     * @param {Date} date 日付
+     * @param {...any} args ログ内容
+     */
     storeSession(level, date, ...args) {
         const oldTrace = sessionStorage.getItem(this.logKey) ?? false;
         if (!oldTrace) {
@@ -123,7 +119,7 @@ class MinLogger {
     }
     /**
      * エンドポイントURL変更用
-     * @param path
+     * @param {string} path
      */
     setEndpointUrl(path) {
         this.endpointUrl = path;
@@ -135,18 +131,22 @@ class MinLogger {
     onDebug(output) {
         this.debugOutput = output;
     }
-    debug(...args) {
+    /**
+     * ロギング関数
+     * @param level
+     * @param args
+     */
+    logging(level, ...args) {
         const date = new Date();
-        this.storeSession(LOG_LEVEL.DEBUG, date, ...args);
+        this.storeSession(level, date, ...args);
         if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
             console.info([...args]);
         }
-        if ((this.endpointUrl !== '' &&
-            this.outputEndpointLevel <= LOG_LEVEL.DEBUG) ||
+        if ((this.endpointUrl !== '' && this.outputEndpointLevel <= level) ||
             this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
             const body = JSON.stringify({
                 date,
-                level: LOG_LEVEL.DEBUG,
+                level: level,
                 details: [...args],
             });
             fetch(this.endpointUrl, {
@@ -158,103 +158,25 @@ class MinLogger {
                 body: JSON.stringify([body]),
             });
         }
+    }
+    debug(...args) {
+        this.logging(LOG_LEVEL.DEBUG, ...args);
     }
     info(...args) {
-        const date = new Date();
-        this.storeSession(LOG_LEVEL.INFO, date, ...args);
-        if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-            console.info([...args]);
-        }
-        if ((this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.INFO) ||
-            this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
-            const body = JSON.stringify({
-                date,
-                level: LOG_LEVEL.INFO,
-                details: [...args],
-            });
-            fetch(this.endpointUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify([body]),
-            });
-        }
+        this.logging(LOG_LEVEL.INFO, ...args);
     }
     log(...args) {
-        const date = new Date();
-        this.storeSession(LOG_LEVEL.LOG, date, [...args]);
-        if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-            console.log([...args]);
-        }
-        if ((this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.LOG) ||
-            this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
-            const body = JSON.stringify({
-                date,
-                level: LOG_LEVEL.LOG,
-                details: [...args],
-            });
-            fetch(this.endpointUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify([body]),
-            });
-        }
+        this.logging(LOG_LEVEL.LOG, ...args);
     }
     warn(...args) {
-        const date = new Date();
-        this.storeSession(LOG_LEVEL.WARN, date, ...args);
-        if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-            console.warn([...args]);
-        }
-        if ((this.endpointUrl !== '' && this.outputEndpointLevel <= LOG_LEVEL.WARN) ||
-            this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
-            const body = JSON.stringify({
-                date,
-                level: LOG_LEVEL.WARN,
-                details: [...args],
-            });
-            fetch(this.endpointUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify([body]),
-            });
-        }
+        this.logging(LOG_LEVEL.WARN, ...args);
     }
     error(...args) {
-        const date = new Date();
-        this.storeSession(LOG_LEVEL.ERROR, date, ...args);
-        if (this.debugOutput === DEBUG_OUTPUT.CONSOLE) {
-            console.error([...args]);
-        }
-        if ((this.endpointUrl !== '' &&
-            this.outputEndpointLevel <= LOG_LEVEL.ERROR) ||
-            this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
-            const body = JSON.stringify([
-                { date, level: LOG_LEVEL.ERROR, details: [...args] },
-            ]);
-            fetch(this.endpointUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                },
-                body: JSON.stringify([body]),
-            });
-        }
+        this.logging(LOG_LEVEL.ERROR, ...args);
     }
     async send(url) {
         const local = localStorage.getItem(this.logKey) ?? '';
         const session = sessionStorage.getItem(this.logKey) ?? '';
-        console.log(local);
-        console.log(session);
         const trace = JSON.parse(local).concat(JSON.parse(session));
         const body = JSON.stringify(trace);
         await fetch(url ?? this.endpointUrl, {
@@ -269,7 +191,7 @@ class MinLogger {
             window.alert('ログを送信しました');
         })
             .catch((e) => {
-            console.log('error:' + e);
+            console.error(e);
             window.alert('ログの送信に失敗しました');
         });
     }
