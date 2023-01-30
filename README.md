@@ -2,7 +2,7 @@
 
 ## 概要
 
-- ゼッタリンクスのフロントエンドプロジェクトのためのロギングツールです。
+- ゼッタリンクスのフロントエンドプロジェクトのためのロギングツール
 
 ```Typescript
 import { MinLogger } from 'min-logger'
@@ -10,8 +10,8 @@ const minLogger = new MinLogger();
 minLogger.log('This is','how to use', 'min-logger')
 ```
 
-- SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'beforeunload'イベントにフックされています。
-- SessionStotageには通常保存しておくことはしない/してはいけない（GAS経由で吸い上げたドキュメントの内容など）が、エラー解析の際に必要となるデータを格納しておきます。
+- SesssionStorage にログデータを収集し、設定値に応じて LocalStorage に残す、またはエンドポイントへ送信することができます。ログデータの SessionStorage から LocalStorage への移動は'beforeunload'イベントにフックしている
+- SessionStotage には通常保存しておくことはしない/してはいけない（GAS 経由で吸い上げたドキュメントの内容など）が、エラー解析の際に必要となるデータを格納
 
 # インストール
 
@@ -23,7 +23,7 @@ yarn add git+https://github.com/ter4uchi/min-logger.git
 
 # 使い方
 
-- debug, info, log, warn, error の 5 つのログレベルの設定が可能です。
+- debug, info, log, warn, error の 5 つのログレベルの設定が可能
 
 ```Typescript
 import { MinLogger } from 'min-logger'
@@ -35,7 +35,7 @@ minLogger.warn('warn')
 minLogger.error('error')
 ```
 
-- StorageAPI 内に保存してあるログをユーザー操作により指定したエンドポイントへ送信可能です。
+- StorageAPI 内に保存してあるログをユーザー操作により指定したエンドポイントへ送信可能
 
 ```Typescript
 import { MinLogger } from 'min-logger'
@@ -45,7 +45,7 @@ minLogger.send();
 // 引数に特定のURLを指定するとことによって設定値以外のエンドポイントに送信することもできます。
 ```
 
-- 一時的に全てのログを console に出力、もしくはエンドポイント URL に送信できます。
+- 一時的に全てのログを console に出力、もしくはエンドポイント URL に送信できる
 
 ```Typescript
 import { MinLogger, DEBUG_OUTPUT } from 'min-logger'
@@ -53,7 +53,7 @@ const minLogger = new MinLogger();
 minLogger.onDebug(DEBUG_OUTPUT.CONSOLE); //引数にDEBUG_OUTPUT.CONSOLE or DEBUG_OUTPUT.ENDPOINTを指定できます。
 ```
 
-- ログは下記のオブジェクトで出力されます。StorageAPI にはこのオブジェクトが配列で格納されます。
+- ログは下記のオブジェクトで出力されます。StorageAPI にはこのオブジェクトが配列で格納される
 
 ```js
 {
@@ -75,16 +75,24 @@ const LOG_LEVEL = {
 
 # 設定
 
-- プロジェクトのルートディレクトリに`min-logger.config.js`を配置することにより以下の config を設定可能です。
+- プロジェクトのルートディレクトリに`min-logger.config.js`を配置することにより以下の config を設定可能
 
 ```Typescript
 const { defineConfig, LOG_LEVEL } = require('min-logger');
 module.exports = defineConfig({
-  endpointUrl: '',//ポストするエンドポイントのURLを指定します。規定値は空です。
-  logKey: 'log', // StorageAPIに格納する際のkeyを指定します。規定値は'log'です。
-  outputLocalStorageLevel: LOG_LEVEL.WARN, // localStorageに格納するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能です。規定値はLOG_LEVEL.WARNです。
-  outputEndpointLevel: LOG_LEVEL.ERROR, // エンドポイントに出力するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能です。規定値はLOG_LEVEL.ERRORです。
-  maxLogLocalStorage: 300 // localStorageに格納する最大数を指定します。整数値を指定可能です。規定値は300です。
+  endpointUrl: '',//ポストするエンドポイントのURLを指定します。規定値は空
+  logKey: 'log', // StorageAPIに格納する際のkeyを指定します。規定値は'log'
+  outputLocalStorageLevel: LOG_LEVEL.WARN, // localStorageに格納するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能規定値はLOG_LEVEL.WARN
+  outputEndpointLevel: LOG_LEVEL.ERROR, // エンドポイントに出力するログレベルを指定します。LOG_LEVEL.DEBUG ~ LOG_LEVEL.ERRORが指定可能規定値はLOG_LEVEL.ERROR
+  maxLogLocalStorage: 300 // localStorageに格納する最大数を指定します。整数値を指定可能規定値は300
 });
 
+```
+
+- 外部から設定値を持ってくる際は`injectConfig()`を使用する。
+
+```Typescript
+const minLogger = new MinLogger();
+minLogger.injectConfig("https://hogehoge.json")
+//type:UserConfigと一致すること
 ```
