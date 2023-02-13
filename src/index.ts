@@ -199,7 +199,17 @@ class MinLogger {
   public async send(url?: string) {
     const local = localStorage.getItem(this.logKey) ?? '';
     const session = sessionStorage.getItem(this.logKey) ?? '';
-    const trace = JSON.parse(local).concat(JSON.parse(session));
+    let trace;
+    if (local === '' && session === '') {
+      window.alert('ログがありませんでした');
+      return;
+    } else if (local !== '' && session === '') {
+      trace = JSON.parse(local);
+    } else if (local === '' && session !== '') {
+      trace = JSON.parse(session);
+    } else {
+      trace = JSON.parse(local).concat(JSON.parse(session));
+    }
     const body = JSON.stringify(trace);
     await fetch(url ?? this.endpointUrl, {
       method: 'POST',
