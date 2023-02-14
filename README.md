@@ -16,9 +16,9 @@ minLogger.log('This is','how to use', 'min-logger')
 # インストール
 
 ```
-npm i git+https://github.com/ter4uchi/min-logger.git
+npm i git+https://github.com/ZetttaLinx-Dev/log-endpoint
 // or
-yarn add git+https://github.com/ter4uchi/min-logger.git
+yarn add git+https://github.com/ZetttaLinx-Dev/log-endpoint
 ```
 
 # 使い方
