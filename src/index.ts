@@ -167,6 +167,7 @@ class MinLogger {
       });
       fetch(this.endpointUrl, {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
@@ -213,6 +214,7 @@ class MinLogger {
     const body = JSON.stringify(trace);
     await fetch(url ?? this.endpointUrl, {
       method: 'POST',
+      mode: 'cors',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
