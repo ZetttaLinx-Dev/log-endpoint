@@ -1,6 +1,6 @@
 {
   "name": "min-logger",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.11.12",
+    "@types/node": "^18.19.33",
     "cpx": "^1.5.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",

@@ -7,12 +7,12 @@ declare const LOG_LEVEL: {
     readonly ERROR: 4;
     readonly NONE: 100;
 };
-type LOG_LEVEL = typeof LOG_LEVEL[keyof typeof LOG_LEVEL];
+type LOG_LEVEL = (typeof LOG_LEVEL)[keyof typeof LOG_LEVEL];
 declare const DEBUG_OUTPUT: {
     readonly CONSOLE: "CONSOLE";
     readonly ENDPOINT: "ENDPOINT";
 };
-type DEBUG_OUTPUT = typeof DEBUG_OUTPUT[keyof typeof DEBUG_OUTPUT];
+type DEBUG_OUTPUT = (typeof DEBUG_OUTPUT)[keyof typeof DEBUG_OUTPUT];
 declare function defineConfig(config: UserConfig): UserConfig;
 declare class MinLogger {
     private endpointUrl;
@@ -22,7 +22,7 @@ declare class MinLogger {
     private maxLogLocalStorage;
     private unhandledErrorLevel;
     private debugOutput;
-    constructor();
+    constructor(userConfig?: UserConfig);
     /**
      * 外部config注入用
      * @param {string} configUrl 外部設定値のURL

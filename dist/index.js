@@ -22,19 +22,19 @@ class MinLogger {
     maxLogLocalStorage = 300;
     unhandledErrorLevel = LOG_LEVEL.WARN;
     debugOutput = sessionStorage.getItem('min-logger-debug-flag');
-    constructor() {
+    constructor(userConfig) {
         try {
-            const userConfig = require(`${process.env.BASE_URL}min-logger.config`);
-            this.endpointUrl = userConfig.endpointUrl ?? this.endpointUrl;
-            this.logKey = userConfig.logKey ?? this.logKey;
+            //const userConfig: UserConfig = require(`${process.env.BASE_URL}min-logger.config`);
+            this.endpointUrl = userConfig?.endpointUrl ?? this.endpointUrl;
+            this.logKey = userConfig?.logKey ?? this.logKey;
             this.outputLocalStorageLevel =
-                userConfig.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
+                userConfig?.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
             this.outputEndpointLevel =
-                userConfig.outputEndpointLevel ?? this.outputEndpointLevel;
+                userConfig?.outputEndpointLevel ?? this.outputEndpointLevel;
             this.unhandledErrorLevel =
-                userConfig.unhandledErrorLevel ?? this.unhandledErrorLevel;
+                userConfig?.unhandledErrorLevel ?? this.unhandledErrorLevel;
             this.maxLogLocalStorage =
-                userConfig.maxLogLocalStorage ?? this.maxLogLocalStorage;
+                userConfig?.maxLogLocalStorage ?? this.maxLogLocalStorage;
         }
         catch {
             // 規定値の使用

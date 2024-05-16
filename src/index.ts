@@ -8,13 +8,13 @@ const LOG_LEVEL = {
   ERROR: 4,
   NONE: 100,
 } as const;
-type LOG_LEVEL = typeof LOG_LEVEL[keyof typeof LOG_LEVEL];
+type LOG_LEVEL = (typeof LOG_LEVEL)[keyof typeof LOG_LEVEL];
 
 const DEBUG_OUTPUT = {
   CONSOLE: 'CONSOLE',
   ENDPOINT: 'ENDPOINT',
 } as const;
-type DEBUG_OUTPUT = typeof DEBUG_OUTPUT[keyof typeof DEBUG_OUTPUT];
+type DEBUG_OUTPUT = (typeof DEBUG_OUTPUT)[keyof typeof DEBUG_OUTPUT];
 
 function defineConfig(config: UserConfig) {
   return config;
@@ -29,19 +29,19 @@ class MinLogger {
   private unhandledErrorLevel: number = LOG_LEVEL.WARN;
   private debugOutput = sessionStorage.getItem('min-logger-debug-flag');
 
-  public constructor() {
+  public constructor(userConfig?: UserConfig) {
     try {
-      const userConfig: UserConfig = require(`${process.env.BASE_URL}min-logger.config`);
-      this.endpointUrl = userConfig.endpointUrl ?? this.endpointUrl;
-      this.logKey = userConfig.logKey ?? this.logKey;
+      //const userConfig: UserConfig = require(`${process.env.BASE_URL}min-logger.config`);
+      this.endpointUrl = userConfig?.endpointUrl ?? this.endpointUrl;
+      this.logKey = userConfig?.logKey ?? this.logKey;
       this.outputLocalStorageLevel =
-        userConfig.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
+        userConfig?.outputLocalStorageLevel ?? this.outputLocalStorageLevel;
       this.outputEndpointLevel =
-        userConfig.outputEndpointLevel ?? this.outputEndpointLevel;
+        userConfig?.outputEndpointLevel ?? this.outputEndpointLevel;
       this.unhandledErrorLevel =
-        userConfig.unhandledErrorLevel ?? this.unhandledErrorLevel;
+        userConfig?.unhandledErrorLevel ?? this.unhandledErrorLevel;
       this.maxLogLocalStorage =
-        userConfig.maxLogLocalStorage ?? this.maxLogLocalStorage;
+        userConfig?.maxLogLocalStorage ?? this.maxLogLocalStorage;
     } catch {
       // 規定値の使用
     }
