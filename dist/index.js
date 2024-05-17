@@ -144,11 +144,11 @@ class MinLogger {
         }
         if ((this.endpointUrl !== '' && this.outputEndpointLevel <= level) ||
             this.debugOutput === DEBUG_OUTPUT.ENDPOINT) {
-            const body = JSON.stringify({
+            const body = {
                 date,
                 level: level,
                 details: [...args],
-            });
+            };
             fetch(this.endpointUrl, {
                 method: 'POST',
                 mode: 'cors',
